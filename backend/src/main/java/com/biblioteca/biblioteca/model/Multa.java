@@ -26,7 +26,7 @@ public class Multa {
     @Column(nullable = false)
     private BigDecimal valor;
 
-    @Column(nullable = false);
+    @Column(nullable = false)
     private Boolean paga = false;
 
     @Column(nullable = false)
