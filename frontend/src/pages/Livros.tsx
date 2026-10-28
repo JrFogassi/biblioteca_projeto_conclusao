@@ -99,7 +99,6 @@ export default function Livros() {
         <h2 className="col-span-2 font-semibold">
           {editandoId ? "Editar livro" : "Novo livro"}
         </h2>
-
         <input
           placeholder="Título"
           value={form.titulo}
@@ -107,23 +106,78 @@ export default function Livros() {
           className="border rounded px-3 py-2"
           required
         />
+        <input
+          placeholder="Autor"
+          value={form.autor}
+          onChange={(e) => setForm({ ...form, autor: e.target.value })}
+          className="border rounded px-3 py-2"
+          required
+        />
+        <input
+          placeholder="ISBN"
+          value={form.isbn}
+          onChange={(e) => setForm({ ...form, isbn: e.target.value })}
+          className="border rounded px-3 py-2"
+          required
+        />
+        <input
+          placeholder="Categoria"
+          value={form.categoria}
+          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+          className="border rounded px-3 py-2"
+        />
+        <input
+          type="number"
+          min={1}
+          placeholder="Quantidade"
+          value={form.quantidadeTotal}
+          onChange={(e) =>
+            setForm({ ...form, quantidadeTotal: Number(e.target.value) })
+          }
+          className="border rounded px-3 py-2"
+          required
+        />
+        <div className="col-span-2 flex gap-2">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            {editandoId ? "Salvar alterações" : "Cadastrar"}
+          </button>
+          {editandoId && (
+            <button
+              type="button"
+              onClick={cancelar}
+              className="px-4 py-2 rounded border"
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
+        ;{erro && <p className="col-span-2 text-red-600 text-sm">{erro}</p>}
       </form>
-    </div>
-  );
 
-  return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Livros</h1>
-        <button onClick={logout} className="text-sm text-red-600">
-          Sair
-        </button>
-      </div>
       <ul className="space-y-2">
         {livros.map((l) => (
-          <li key={l.id} className="bg-white p-3 rounded shadow">
-            <strong>{l.titulo}</strong> - {l.autor} ({l.quantidadeDisponivel}{" "}
-            disponíveis)
+          <li
+            key={l.id}
+            className="bg-white p-3 rounded shadow flex justify-between items-center"
+          >
+            <div>
+              <strong>{l.titulo}</strong> - {l.autor}
+              <div className="text-sm text-gray-500">
+                {l.categoria} · ISBN {l.isbn} · {l.quantidadeDisponivel}/
+                {l.quantidadeTotal} disponíveis
+              </div>
+            </div>
+            <div className="flex gap-3 text-sm">
+              <button onClick={() => editar(l)} className="text-blue-600">
+                Editar
+              </button>
+              <button onClick={() => excluir(l.id)} className="text-red-600">
+                Excluir
+              </button>
+            </div>
           </li>
         ))}
       </ul>
