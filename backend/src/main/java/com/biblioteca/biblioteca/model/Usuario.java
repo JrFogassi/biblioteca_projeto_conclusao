@@ -1,5 +1,7 @@
 package com.biblioteca.biblioteca.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +30,7 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String senha;
 
@@ -46,6 +49,7 @@ public class Usuario implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return senha;
     }

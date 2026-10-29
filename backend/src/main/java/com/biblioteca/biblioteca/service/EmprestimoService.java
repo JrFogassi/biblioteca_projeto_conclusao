@@ -39,6 +39,10 @@ public class EmprestimoService {
         return emprestimoRepository.findAll();
     }
 
+    public List<Emprestimo> listarPorUsuario(Long usuarioId) {
+        return emprestimoRepository.findByUsuarioId(usuarioId);
+    }
+
     public Emprestimo criar(Long usuarioId, Long livroId) {
         Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -64,6 +68,10 @@ public class EmprestimoService {
 
     public Emprestimo devolver(Long emprestimoId) {
         Emprestimo emprestimo = emprestimoRepository.findById(emprestimoId).orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+
+        if (emprestimo.getDataDevolucao() != null) {
+            throw new RuntimeException("Empréstimo já foi devolvido");
+        }
 
         LocalDate hoje = LocalDate.now();
         emprestimo.setDataDevolucao(hoje);

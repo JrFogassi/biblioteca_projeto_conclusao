@@ -1,8 +1,10 @@
 package com.biblioteca.biblioteca.controller;
 
 import com.biblioteca.biblioteca.model.Emprestimo;
+import com.biblioteca.biblioteca.model.Usuario;
 import com.biblioteca.biblioteca.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,13 +21,19 @@ public class EmprestimoController {
         return emprestimoService.listarTodos();
     }
 
+    @GetMapping("/meus")
+    public List<Emprestimo> meus(@AuthenticationPrincipal
+    Usuario usuario) {
+        return emprestimoService.listarPorUsuario(usuario.getId());
+    }
+
     @PostMapping
-    public Emprestimo criar (@RequestParam Long usuarioId, @RequestParam Long livroId) {
-        return emprestimoService.criar(usuarioId, livroId);
+    public Emprestimo criar(@RequestParam Long livroId, @AuthenticationPrincipal Usuario usuario) {
+        return emprestimoService.criar(usuario.getId(), livroId);
     }
 
     @PutMapping("/{id}/devolver")
-    public Emprestimo devolver (@PathVariable Long id) {
+    public Emprestimo devolver(@PathVariable Long id) {
         return emprestimoService.devolver(id);
     }
 }
