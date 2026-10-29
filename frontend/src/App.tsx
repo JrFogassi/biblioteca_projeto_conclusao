@@ -3,6 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Livros from "./pages/Livros";
+import Emprestimos from "./pages/Emprestimos";
 
 export default function App() {
   return (
@@ -15,6 +16,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <Livros />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/emprestimos"
+            element={
+              <PrivateRoute>
+                <Emprestimos />
               </PrivateRoute>
             }
           />
