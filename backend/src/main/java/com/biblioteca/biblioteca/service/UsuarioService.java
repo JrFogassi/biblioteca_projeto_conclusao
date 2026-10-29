@@ -27,6 +27,7 @@ public class UsuarioService {
     }
 
     public Usuario cadastrar(Usuario usuario) {
+        usuario.setPapel(Usuario.Papel.LEITOR);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         return usuarioRepository.save(usuario);
     }
