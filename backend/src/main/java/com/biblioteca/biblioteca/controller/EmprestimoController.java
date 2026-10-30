@@ -33,7 +33,7 @@ public class EmprestimoController {
     }
 
     @PutMapping("/{id}/devolver")
-    public Emprestimo devolver(@PathVariable Long id) {
-        return emprestimoService.devolver(id);
+    public Emprestimo devolver(@PathVariable Long id, @AuthenticationPrincipal Usuario usuario) {
+        return emprestimoService.devolver(id, usuario);
     }
 }

@@ -1,10 +1,12 @@
 package com.biblioteca.biblioteca.controller;
 
 import com.biblioteca.biblioteca.config.JwtUtil;
+import com.biblioteca.biblioteca.model.Usuario;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,19 +22,18 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserDetailsService usuarioDetailsService;
-
-    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha()));
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
+        );
 
-        UserDetails userDetails = usuarioDetailsService.loadUserByUsername(request.getEmail());
-        String token = jwtUtil.gerarToken(userDetails);
+        Usuario usuario = (Usuario) auth.getPrincipal();
+        String token = jwtUtil.gerarToken(usuario);
 
-        return new LoginResponse(token);
+        return new LoginResponse(token, usuario.getNome(), usuario.getPapel().name());
     }
 
     @Data
@@ -44,5 +45,7 @@ public class AuthController {
     @Data
     public static class LoginResponse {
         private final String token;
+        private final String nome;
+        private final String papel;
     }
 }

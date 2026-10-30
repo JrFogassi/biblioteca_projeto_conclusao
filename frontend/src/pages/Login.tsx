@@ -1,6 +1,6 @@
 import { use, useState, type FormEvent } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -54,6 +54,12 @@ export default function Login() {
         >
           Entrar
         </button>
+        <Link
+          to="/cadastro"
+          className="block text-center text-sm text-blue-600"
+        >
+          Criar conta
+        </Link>
       </form>
     </div>
   );

@@ -9,8 +9,9 @@ import com.biblioteca.biblioteca.repository.LivroRepository;
 import com.biblioteca.biblioteca.repository.MultaRepository;
 import com.biblioteca.biblioteca.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -66,8 +67,14 @@ public class EmprestimoService {
 
     }
 
-    public Emprestimo devolver(Long emprestimoId) {
+    public Emprestimo devolver(Long emprestimoId, Usuario solicitante) {
         Emprestimo emprestimo = emprestimoRepository.findById(emprestimoId).orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+
+        boolean dono = emprestimo.getUsuario().getId().equals(solicitante.getId());
+        boolean bibliotecario = solicitante.getPapel() == Usuario.Papel.BIBLIOTECARIO;
+        if (!dono && !bibliotecario) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não pode devolver este empréstimo");
+        }
 
         if (emprestimo.getDataDevolucao() != null) {
             throw new RuntimeException("Empréstimo já foi devolvido");

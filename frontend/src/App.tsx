@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Livros from "./pages/Livros";
 import Emprestimos from "./pages/Emprestimos";
+import Cadastro from "./pages/Cadastro";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
             }
           />
           <Route path="*" element={<Navigate to="/livros" replace />} />
+          <Route path="/cadastro" element={<Cadastro />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
