@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const { logout } = useAuth();
+  const { usuario, logout } = useAuth();
 
   return (
     <nav className="bg-white shadow">
@@ -14,6 +14,14 @@ export default function Navbar() {
           <Link to="/emprestimos" className="hover:text-blue-600">
             Meus empréstimos
           </Link>
+        </div>
+        <div className="flex items-center gap-4 text-sm">
+          {usuario && (
+            <span className="text-gray-500">
+              {usuario.nome} ·{" "}
+              {usuario.papel === "BIBLIOTECARIO" ? "Bibliotecário" : "Leitor"}
+            </span>
+          )}
         </div>
         <button onClick={logout} className="text-sm text-red-600">
           Sair

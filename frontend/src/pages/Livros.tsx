@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 interface Livro {
   id: number;
@@ -28,6 +29,8 @@ export default function Livros() {
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
+  const { usuario } = useAuth();
+  const ehBibliotecario = usuario?.papel === "BIBLIOTECARIO";
 
   function carregar() {
     api.get<Livro[]>("/livros").then((res) => setLivros(res.data));
@@ -108,71 +111,73 @@ export default function Livros() {
       <div className="max-w-3xl mx-auto p-6 space-y-6">
         <h1 className="text-2xl font-bold">Livros</h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white p-4 rounded shadow grid grid-cols-2 gap-3"
-        >
-          <h2 className="col-span-2 font-semibold">
-            {editandoId ? "Editar livro" : "Novo livro"}
-          </h2>
+        {ehBibliotecario && (
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-4 rounded shadow grid grid-cols-2 gap-3"
+          >
+            <h2 className="cols-span-2 font-semibold">
+              {editandoId ? "Editar livro" : "Novo livro"}
+            </h2>
 
-          <input
-            placeholder="Título"
-            value={form.titulo}
-            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-            className="border rounded px-3 py-2"
-            required
-          />
-          <input
-            placeholder="Autor"
-            value={form.autor}
-            onChange={(e) => setForm({ ...form, autor: e.target.value })}
-            className="border rounded px-3 py-2"
-            required
-          />
-          <input
-            placeholder="ISBN"
-            value={form.isbn}
-            onChange={(e) => setForm({ ...form, isbn: e.target.value })}
-            className="border rounded px-3 py-2"
-            required
-          />
-          <input
-            placeholder="Categoria"
-            value={form.categoria}
-            onChange={(e) => setForm({ ...form, categoria: e.target.value })}
-            className="border rounded px-3 py-2"
-          />
-          <input
-            type="number"
-            min={1}
-            placeholder="Quantidade"
-            value={form.quantidadeTotal}
-            onChange={(e) =>
-              setForm({ ...form, quantidadeTotal: Number(e.target.value) })
-            }
-            className="border rounded px-3 py-2"
-            required
-          />
+            <input
+              placeholder="Título"
+              value={form.titulo}
+              onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+              className="border rounded px-3 py-2"
+              required
+            />
+            <input
+              placeholder="Autor"
+              value={form.autor}
+              onChange={(e) => setForm({ ...form, autor: e.target.value })}
+              className="border rounded px-3 py-2"
+              required
+            />
+            <input
+              placeholder="ISBN"
+              value={form.isbn}
+              onChange={(e) => setForm({ ...form, isbn: e.target.value })}
+              className="border rounded px-3 py-2"
+              required
+            />
+            <input
+              placeholder="Categoria"
+              value={form.categoria}
+              onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+              className="border rounded px-3 py-2"
+            />
+            <input
+              type="number"
+              min={1}
+              placeholder="Quantidade"
+              value={form.quantidadeTotal}
+              onChange={(e) =>
+                setForm({ ...form, quantidadeTotal: Number(e.target.value) })
+              }
+              className="border rounded px-3 py-2"
+              required
+            />
 
-          <div className="col-span-2 flex gap-2">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              {editandoId ? "Salvar alterações" : "Cadastrar"}
-            </button>
-            {editandoId && (
+            <div className="col-span-2 flex gap-2">
               <button
-                type="button"
-                onClick={cancelar}
-                className="px-4 py-2 rounded border"
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
-                Cancelar
+                {editandoId ? "Salvar alterações" : "Cadastrar"}
               </button>
-            )}
-          </div>
-        </form>
+              {editandoId && (
+                <button
+                  type="button"
+                  onClick={cancelar}
+                  className="px-4 py-2 rounded border"
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
+          </form>
+        )}
 
         {erro && <p className="text-red-600 text-sm">{erro}</p>}
         {mensagem && <p className="text-green-700 text-sm">{mensagem}</p>}
