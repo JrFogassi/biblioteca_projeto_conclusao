@@ -208,12 +208,19 @@ export default function Livros() {
                 >
                   Emprestar
                 </button>
-                <button onClick={() => editar(l)} className="text-blue-600">
-                  Editar
-                </button>
-                <button onClick={() => excluir(l.id)} className="text-red-600">
-                  Excluir
-                </button>
+                {ehBibliotecario && (
+                  <>
+                    <button onClick={() => editar(l)} className="text-blue-600">
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => excluir(l.id)}
+                      className="text-red-600"
+                    >
+                      Excluir
+                    </button>
+                  </>
+                )}
               </div>
             </li>
           ))}
