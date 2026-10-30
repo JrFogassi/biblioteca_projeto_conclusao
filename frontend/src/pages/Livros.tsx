@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import { mensagemDeErro } from "../services/erros";
 
 interface Livro {
   id: number;
@@ -33,11 +34,21 @@ export default function Livros() {
   const ehBibliotecario = usuario?.papel === "BIBLIOTECARIO";
 
   function carregar() {
-    api.get<Livro[]>("/livros").then((res) => setLivros(res.data));
+    api
+      .get<Livro[]>("/livros")
+      .then((res) => setLivros(res.data))
+      .catch((err) =>
+        setErro(mensagemDeErro(err, "Não foi possível carregar os livros.")),
+      );
   }
 
   useEffect(() => {
-    api.get<Livro[]>("/livros").then((res) => setLivros(res.data));
+    api
+      .get<Livro[]>("/livros")
+      .then((res) => setLivros(res.data))
+      .catch((err) =>
+        setErro(mensagemDeErro(err, "Não foi possível carregar os livros")),
+      );
   }, []);
 
   async function handleSubmit(e: FormEvent) {
@@ -52,10 +63,8 @@ export default function Livros() {
       }
       cancelar();
       carregar();
-    } catch {
-      setErro(
-        "Não foi possível salvar. Verifique se o ISBN já está cadastrado.",
-      );
+    } catch (err) {
+      setErro(mensagemDeErro(err, "Não foi possível salvar o livro"));
     }
   }
 
@@ -82,10 +91,8 @@ export default function Livros() {
     try {
       await api.delete(`/livros/${id}`);
       carregar();
-    } catch {
-      setErro(
-        "Não foi possível excluir (o livro pode ter empréstimos vinculados).",
-      );
+    } catch (err) {
+      setErro(mensagemDeErro(err, "Não foi possível excluir o livro."));
     }
   }
 
@@ -98,10 +105,8 @@ export default function Livros() {
         "Empréstimo realizado! A devolução está prevista para daqui a 7 dias.",
       );
       carregar();
-    } catch {
-      setErro(
-        "Não foi possível emprestar este livro (talvez não haja exemplares disponíveis).",
-      );
+    } catch (err) {
+      setErro(mensagemDeErro(err, "Não foi possível emprestar este livro"));
     }
   }
 

@@ -42,8 +42,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/emprestimos/meus").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/emprestimos").hasRole("BIBLIOTECARIO")
                         .anyRequest().authenticated()
-                );
-
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        
         return http.build();
     }
 
