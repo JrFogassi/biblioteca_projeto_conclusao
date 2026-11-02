@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/livros/**").hasRole("BIBLIOTECARIO")
                         .requestMatchers(HttpMethod.GET, "/api/emprestimos/meus").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/emprestimos").hasRole("BIBLIOTECARIO")
+                        .requestMatchers(HttpMethod.PUT, "/api/multas/*/pagar").hasRole("BIBLIOTECARIO")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
