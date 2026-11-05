@@ -2,6 +2,7 @@ import { use, useState, type FormEvent } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { mensagemDeErro } from "../services/erros";
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -25,8 +26,14 @@ export default function Cadastro() {
       await api.post("/usuarios", { nome, email, senha });
       await login(email, senha);
       navigate("/livros");
-    } catch {
-      setErro("Não foi possível criar a conta. Tente outro e-mail.");
+    } catch (err) {
+      setErro(
+        mensagemDeErro(
+          err,
+          "Não foi possível criar a conta.",
+          "Este e-mail já está cadastrado.",
+        ),
+      );
     }
   }
 

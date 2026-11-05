@@ -64,7 +64,13 @@ export default function Livros() {
       cancelar();
       carregar();
     } catch (err) {
-      setErro(mensagemDeErro(err, "Não foi possível salvar o livro"));
+      setErro(
+        mensagemDeErro(
+          err,
+          "Não foi possível salvar o livro.",
+          "Já existe um livro com esse ISBN.",
+        ),
+      );
     }
   }
 

@@ -1,14 +1,22 @@
 import { isAxiosError } from "axios";
 
-export function mensagemDeErro(err: unknown, padrao: string): string {
+export function mensagemDeErro(
+  err: unknown,
+  padrao: string,
+  conflito?: string,
+): string {
   if (isAxiosError(err)) {
     if (!err.response) {
       return "Sem conexão com o servidor. O backend está rodando?";
     }
-    if (err.response.status === 401 || err.response.status === 403) {
-      return "Sem permissão ou sessão expirada. Saia e entre novamente.";
+    const status = err.response.status;
+    if (status === 403) {
+      return "Você não tem permissão para fazer isso.";
     }
-    return `${padrao} (erro ${err.response.status})`;
+    if (status === 409 && conflito) {
+      return conflito;
+    }
+    return `${padrao} (erro ${status})`;
   }
 
   return padrao;

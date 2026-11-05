@@ -1,6 +1,7 @@
 import { use, useState, type FormEvent } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { isAxiosError } from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,8 +16,12 @@ export default function Login() {
     try {
       await login(email, senha);
       navigate("/livros");
-    } catch {
-      setErro("E-mail ou senha inválidos");
+    } catch (err) {
+      setErro(
+        isAxiosError(err) && !err.response
+          ? "Sem conexão com o servidor. O backend está rodando?"
+          : "E-mail ou senha inválidos",
+      );
     }
   }
 

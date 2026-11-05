@@ -3,7 +3,9 @@ package com.biblioteca.biblioteca.service;
 import com.biblioteca.biblioteca.model.Livro;
 import com.biblioteca.biblioteca.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,9 @@ public class LivroService {
     }
 
     public Livro salvar(Livro livro) {
+        if (livroRepository.existsByIsbn(livro.getIsbn())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "ISBN já cadastrado");
+        }
         livro.setQuantidadeDisponivel(livro.getQuantidadeTotal());
         return livroRepository.save(livro);
     }
@@ -35,6 +40,10 @@ public class LivroService {
         livro.setIsbn(dadosAtualizados.getIsbn());
         livro.setCategoria(dadosAtualizados.getCategoria());
         livro.setQuantidadeTotal(livro.getQuantidadeTotal());
+
+        if (livroRepository.existsByIsbnAndIdNot(dadosAtualizados.getIsbn(), id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "ISBN já cadastrado");
+        }
 
         return livroRepository.save(livro);
     }

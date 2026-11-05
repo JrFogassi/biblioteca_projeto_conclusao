@@ -5,6 +5,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Livros from "./pages/Livros";
 import Emprestimos from "./pages/Emprestimos";
 import Cadastro from "./pages/Cadastro";
+import Multas from "./pages/Multas";
 
 export default function App() {
   return (
@@ -25,6 +26,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <Emprestimos />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/multas"
+            element={
+              <PrivateRoute>
+                <Multas />
               </PrivateRoute>
             }
           />
